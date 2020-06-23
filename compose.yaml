@@ -1,0 +1,33 @@
+# https://docs.docker.com/compose/compose-file
+version: '3.8'
+
+networks:
+  shared-network:
+    driver: bridge
+
+services:
+
+  # Database
+  dgraph-zero:
+    container_name: dgraph-zero
+    networks:
+      - shared-network
+    image: dgraph/dgraph:master
+    environment:
+      - DGRAPH_ZERO_MY=dgraph-zero:5080
+    command: dgraph zero
+  dgraph-alpha:
+    container_name: dgraph-alpha
+    networks:
+      - shared-network
+    image: dgraph/dgraph:master
+    ports:
+      - 8080:8080
+    depends_on:
+      - dgraph-zero
+    environment:
+      - DGRAPH_ALPHA_MY=dgraph-alpha:7080
+      - DGRAPH_ALPHA_LRU_MB=1024
+      - DGRAPH_ALPHA_ZERO=dgraph-zero:5080
+      - DGRAPH_ALPHA_WHITELIST=0.0.0.0/0
+    command: dgraph alpha --vmodule=server=3

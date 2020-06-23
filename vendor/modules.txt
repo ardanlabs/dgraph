@@ -1,0 +1,9 @@
+# github.com/ardanlabs/conf v1.3.2
+## explicit
+github.com/ardanlabs/conf
+# github.com/ardanlabs/graphql v1.4.2
+## explicit
+github.com/ardanlabs/graphql
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
