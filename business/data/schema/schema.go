@@ -14,14 +14,15 @@ import (
 )
 
 // document represents the schema for the project.
-var document = `type User {
+var document = `
+type User {
 	id: ID!
 	twitter_id: String!
 	handle: String! @search(by: [exact])
 	name: String!
 	location: String
-	followers_count: Int
-	followers: [User]
+	following_count: Int
+	following: [User]
 }
 `
 

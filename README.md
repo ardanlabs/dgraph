@@ -1,6 +1,6 @@
 # Dgraph
 
-Copyright 2020 Ardan Labs
+Copyright 2020 Ardan Labs  
 bill@ardanlabs.com
 
 ## Licensing

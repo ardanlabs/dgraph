@@ -1,0 +1,218 @@
+directive @id on FIELD_DEFINITION
+directive @auth(
+  query: AuthRule
+  add: AuthRule
+  update: AuthRule
+  delete: AuthRule
+) on OBJECT
+directive @custom(http: CustomHTTP) on FIELD_DEFINITION
+directive @remote on OBJECT | INTERFACE
+directive @cascade on FIELD
+directive @hasInverse(field: String!) on FIELD_DEFINITION
+directive @search(by: [DgraphIndex!]) on FIELD_DEFINITION
+directive @dgraph(
+  type: String
+  pred: String
+) on OBJECT | INTERFACE | FIELD_DEFINITION
+directive @secret(field: String!, pred: String) on OBJECT | INTERFACE
+input AddUserInput {
+  twitter_id: String!
+  handle: String!
+  name: String!
+  location: String
+  following_count: Int
+  following: [UserRef]
+}
+
+type AddUserPayload {
+  user(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
+  numUids: Int
+}
+
+input AuthRule {
+  and: [AuthRule]
+  or: [AuthRule]
+  not: AuthRule
+  rule: String
+}
+
+input CustomHTTP {
+  url: String!
+  method: HTTPMethod!
+  body: String
+  graphql: String
+  mode: Mode
+  forwardHeaders: [String!]
+  secretHeaders: [String!]
+  skipIntrospection: Boolean
+}
+
+scalar DateTime
+
+input DateTimeFilter {
+  eq: DateTime
+  le: DateTime
+  lt: DateTime
+  ge: DateTime
+  gt: DateTime
+}
+
+type DeleteUserPayload {
+  msg: String
+  numUids: Int
+}
+
+enum DgraphIndex {
+  int
+  float
+  bool
+  hash
+  exact
+  term
+  fulltext
+  trigram
+  regexp
+  year
+  month
+  day
+  hour
+}
+
+input FloatFilter {
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+}
+
+enum HTTPMethod {
+  GET
+  POST
+  PUT
+  PATCH
+  DELETE
+}
+
+input IntFilter {
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+}
+
+enum Mode {
+  BATCH
+  SINGLE
+}
+
+type Mutation {
+  addUser(input: [AddUserInput!]!): AddUserPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  deleteUser(filter: UserFilter!): DeleteUserPayload
+}
+
+type Query {
+  getUser(id: ID!): User
+  queryUser(
+    filter: UserFilter
+    order: UserOrder
+    first: Int
+    offset: Int
+  ): [User]
+}
+
+input StringExactFilter {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+}
+
+input StringFullTextFilter {
+  alloftext: String
+  anyoftext: String
+}
+
+input StringHashFilter {
+  eq: String
+}
+
+input StringRegExpFilter {
+  regexp: String
+}
+
+input StringTermFilter {
+  allofterms: String
+  anyofterms: String
+}
+
+input UpdateUserInput {
+  filter: UserFilter!
+  set: UserPatch
+  remove: UserPatch
+}
+
+type UpdateUserPayload {
+  user(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
+  numUids: Int
+}
+
+type User {
+  id: ID!
+  twitter_id: String!
+  handle: String!
+  name: String!
+  location: String
+  following_count: Int
+  following(
+    filter: UserFilter
+    order: UserOrder
+    first: Int
+    offset: Int
+  ): [User]
+}
+
+input UserFilter {
+  id: [ID!]
+  handle: StringExactFilter
+  and: UserFilter
+  or: UserFilter
+  not: UserFilter
+}
+
+input UserOrder {
+  asc: UserOrderable
+  desc: UserOrderable
+  then: UserOrder
+}
+
+enum UserOrderable {
+  twitter_id
+  handle
+  name
+  location
+  following_count
+}
+
+input UserPatch {
+  twitter_id: String
+  handle: String
+  name: String
+  location: String
+  following_count: Int
+  following: [UserRef]
+}
+
+input UserRef {
+  id: ID
+  twitter_id: String
+  handle: String
+  name: String
+  location: String
+  following_count: Int
+  following: [UserRef]
+}
+

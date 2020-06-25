@@ -7,7 +7,6 @@ networks:
 
 services:
 
-  # Database
   dgraph-zero:
     container_name: dgraph-zero
     networks:
@@ -16,6 +15,7 @@ services:
     environment:
       - DGRAPH_ZERO_MY=dgraph-zero:5080
     command: dgraph zero
+
   dgraph-alpha:
     container_name: dgraph-alpha
     networks:
