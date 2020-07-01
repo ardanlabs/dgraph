@@ -32,3 +32,34 @@ https://github.com/ardanlabs/dgraph/wiki
 William Kennedy  
 ArdanLabs (www.ardanlabs.com)  
 bill@ardanlabs.com  
+
+
+Getting Started
+https://developer.twitter.com/en/docs/basics/getting-started
+
+Get an account
+https://developer.twitter.com/en/docs/basics/developer-portal/overview
+
+Apply for a developer account
+https://developer.twitter.com/en/application/use-case
+
+Create an App
+
+curl -u ${DGRAPH_TWITTER_API_KEY}:${DGRAPH_TWITTER_SECRET_KEY} \
+  --data 'grant_type=client_credentials' \
+  'https://api.twitter.com/oauth2/token'
+
+curl --request GET \
+  --url https://api.twitter.com/1.1/friends/ids.json?screen_name=goinggodotnet \
+  --header "authorization: bearer ${TWITTER_TOKEN}" \
+  --header "content-type: application/json"
+
+curl --request GET \
+  --url https://api.twitter.com/1.1/users/show.json?user_id=699263 \
+  --header "authorization: bearer ${TWITTER_TOKEN}" \
+  --header "content-type: application/json"
+
+  curl --request GET \
+  --url https://api.twitter.com/1.1/users/show.json?screen_name=goinggodotnet \
+  --header "authorization: bearer ${TWITTER_TOKEN}" \
+  --header "content-type: application/json"

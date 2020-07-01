@@ -39,8 +39,9 @@ func run(log *log.Logger) error {
 			AuthHeaderName string `conf:"default:X-Travel-Auth"`
 			AuthToken      string
 		}
-		APIKeys struct {
-			TwitterKey string
+		Twitter struct {
+			ScreenName string `conf:"default:goinggodotnet"`
+			Token      string `conf:"noprint"`
 		}
 	}
 	cfg.Version.SVN = build
@@ -94,6 +95,11 @@ func run(log *log.Logger) error {
 	case "schema":
 		if err := commands.Schema(gqlConfig); err != nil {
 			return errors.Wrap(err, "updating schema")
+		}
+
+	case "seed":
+		if err := commands.Seed(cfg.Twitter.Token, cfg.Twitter.ScreenName); err != nil {
+			return errors.Wrap(err, "seeding database")
 		}
 
 	default:

@@ -18,11 +18,11 @@ var document = `
 type User {
 	id: ID!
 	twitter_id: String!
-	handle: String! @search(by: [exact])
+	screen_name: String! @search(by: [exact])
 	name: String!
 	location: String
-	following_count: Int
-	following: [User]
+	friends_count: Int
+	friends: [User]
 }
 `
 

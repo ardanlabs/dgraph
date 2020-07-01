@@ -17,3 +17,6 @@ logs:
 
 schema:
 	go run app/admin/main.go schema
+
+seed:
+	go run app/admin/main.go seed
