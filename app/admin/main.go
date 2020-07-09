@@ -98,7 +98,7 @@ func run(log *log.Logger) error {
 		}
 
 	case "seed":
-		if err := commands.Seed(cfg.Twitter.Token, cfg.Twitter.ScreenName); err != nil {
+		if err := commands.Seed(log, cfg.Twitter.Token, cfg.Twitter.ScreenName); err != nil {
 			return errors.Wrap(err, "seeding database")
 		}
 

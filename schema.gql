@@ -1,4 +1,6 @@
+directive @search(by: [DgraphIndex!]) on FIELD_DEFINITION
 directive @id on FIELD_DEFINITION
+directive @withSubscription on OBJECT | INTERFACE
 directive @auth(
   query: AuthRule
   add: AuthRule
@@ -6,22 +8,22 @@ directive @auth(
   delete: AuthRule
 ) on OBJECT
 directive @custom(http: CustomHTTP) on FIELD_DEFINITION
-directive @remote on OBJECT | INTERFACE
 directive @cascade on FIELD
-directive @hasInverse(field: String!) on FIELD_DEFINITION
-directive @search(by: [DgraphIndex!]) on FIELD_DEFINITION
 directive @dgraph(
   type: String
   pred: String
 ) on OBJECT | INTERFACE | FIELD_DEFINITION
 directive @secret(field: String!, pred: String) on OBJECT | INTERFACE
+directive @remote on OBJECT | INTERFACE
+directive @hasInverse(field: String!) on FIELD_DEFINITION
 input AddUserInput {
-  twitter_id: String!
-  handle: String!
+  source_id: String!
+  source: String!
+  screen_name: String!
   name: String!
   location: String
-  following_count: Int
-  following: [UserRef]
+  friends_count: Int
+  friends: [UserRef]
 }
 
 type AddUserPayload {
@@ -44,6 +46,7 @@ input CustomHTTP {
   mode: Mode
   forwardHeaders: [String!]
   secretHeaders: [String!]
+  introspectionHeaders: [String!]
   skipIntrospection: Boolean
 }
 
@@ -58,6 +61,7 @@ input DateTimeFilter {
 }
 
 type DeleteUserPayload {
+  user(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
   msg: String
   numUids: Int
 }
@@ -162,22 +166,18 @@ type UpdateUserPayload {
 
 type User {
   id: ID!
-  twitter_id: String!
-  handle: String!
+  source_id: String!
+  source: String!
+  screen_name: String!
   name: String!
   location: String
-  following_count: Int
-  following(
-    filter: UserFilter
-    order: UserOrder
-    first: Int
-    offset: Int
-  ): [User]
+  friends_count: Int
+  friends(filter: UserFilter, order: UserOrder, first: Int, offset: Int): [User]
 }
 
 input UserFilter {
   id: [ID!]
-  handle: StringExactFilter
+  screen_name: StringExactFilter
   and: UserFilter
   or: UserFilter
   not: UserFilter
@@ -190,29 +190,31 @@ input UserOrder {
 }
 
 enum UserOrderable {
-  twitter_id
-  handle
+  source_id
+  source
+  screen_name
   name
   location
-  following_count
+  friends_count
 }
 
 input UserPatch {
-  twitter_id: String
-  handle: String
+  source_id: String
+  source: String
+  screen_name: String
   name: String
   location: String
-  following_count: Int
-  following: [UserRef]
+  friends_count: Int
+  friends: [UserRef]
 }
 
 input UserRef {
   id: ID
-  twitter_id: String
-  handle: String
+  source_id: String
+  source: String
+  screen_name: String
   name: String
   location: String
-  following_count: Int
-  following: [UserRef]
+  friends_count: Int
+  friends: [UserRef]
 }
-

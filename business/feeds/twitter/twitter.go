@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"time"
@@ -28,11 +29,12 @@ type User struct {
 // Twitter represents the set of API's to access twitter data.
 type Twitter struct {
 	client http.Client
+	log    *log.Logger
 	token  string
 }
 
 // New constructs a Twitter value for use.
-func New(token string) *Twitter {
+func New(log *log.Logger, token string) *Twitter {
 	client := http.Client{
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
@@ -51,6 +53,7 @@ func New(token string) *Twitter {
 
 	return &Twitter{
 		client: client,
+		log:    log,
 		token:  fmt.Sprintf("bearer %s", token),
 	}
 }
@@ -86,6 +89,8 @@ func (t *Twitter) RetrieveUser(ctx context.Context, screenName string) (User, er
 		return User{}, fmt.Errorf("twitter decoding error: %w", err)
 	}
 
+	t.log.Printf("%v", u)
+
 	return u, nil
 }
 
@@ -119,6 +124,8 @@ func (t *Twitter) RetrieveUserByID(ctx context.Context, id int) (User, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&u); err != nil {
 		return User{}, fmt.Errorf("twitter decoding error: %w", err)
 	}
+
+	t.log.Printf("%v", u)
 
 	return u, nil
 }
@@ -163,7 +170,6 @@ func (t *Twitter) RetrieveFriends(ctx context.Context, id int) ([]User, error) {
 			return nil, fmt.Errorf("twitter retrieve user: %w", err)
 		}
 		users[i] = u
-		fmt.Println(u)
 	}
 
 	return users, nil

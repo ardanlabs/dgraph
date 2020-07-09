@@ -17,7 +17,8 @@ import (
 var document = `
 type User {
 	id: ID!
-	twitter_id: String!
+	source_id: String!
+	source: String!
 	screen_name: String! @search(by: [exact])
 	name: String!
 	location: String
