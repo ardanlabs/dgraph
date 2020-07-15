@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ardanlabs/dgraph/business/data"
 	"github.com/ardanlabs/graphql"
 	"github.com/pkg/errors"
 )
@@ -40,11 +39,9 @@ type Schema struct {
 }
 
 // New constructs a Schema value for use to manage the schema.
-func New(gqlConfig data.GraphQLConfig) *Schema {
-	gql := data.NewGraphQL(gqlConfig)
-
+func New(graphql *graphql.GraphQL) *Schema {
 	schema := Schema{
-		graphql:  gql,
+		graphql:  graphql,
 		document: document,
 	}
 

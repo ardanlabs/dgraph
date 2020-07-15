@@ -38,6 +38,66 @@ func Add(ctx context.Context, gql *graphql.GraphQL, nu NewUser) (User, error) {
 	return u, nil
 }
 
+// One returns the specified user from the database by the city id.
+func One(ctx context.Context, gql *graphql.GraphQL, userID string) (User, error) {
+	query := fmt.Sprintf(`
+query {
+	getUser(id: %q) {
+		id
+		source_id
+    	source
+		screen_name
+		name
+		location
+		friends_count
+	}
+}`, userID)
+
+	var result struct {
+		GetUser User `json:"getUser"`
+	}
+	if err := gql.Query(ctx, query, &result); err != nil {
+		return User{}, errors.Wrap(err, "query failed")
+	}
+
+	if result.GetUser.ID == "" {
+		return User{}, ErrNotFound
+	}
+
+	return result.GetUser, nil
+}
+
+// OneByScreenName returns the specified user from the database by screen name.
+func OneByScreenName(ctx context.Context, gql *graphql.GraphQL, screenName string) (User, error) {
+	query := fmt.Sprintf(`
+query {
+	queryUser(filter: { screen_name: { eq: %q } }) {
+		id
+		source_id
+    	source
+		screen_name
+		name
+		location
+		friends_count
+	}
+}`, screenName)
+
+	var result struct {
+		QueryUser []User `json:"queryUser"`
+	}
+	if err := gql.Query(ctx, query, &result); err != nil {
+		return User{}, errors.Wrap(err, "query failed")
+	}
+
+	if len(result.QueryUser) != 1 {
+		return User{}, ErrNotFound
+	}
+
+	return result.QueryUser[0], nil
+}
+
+// =============================================================================
+
 func add(ctx context.Context, gql *graphql.GraphQL, user User) (User, error) {
 	mutation, result := prepareAdd(user)
 	if err := gql.Query(ctx, mutation, &result); err != nil {
@@ -72,22 +132,6 @@ mutation {
 }
 
 /*
-mutation {
-	addUser(input: [{
-		source_id: "123456"
-    	source: "twitter"
-		screen_name: "goinggodotnet"
-		name: "Bill"
-		location: "miami, fl"
-		friends_count: 10
-	}])
-	{
-    	user {
-	  		id
-		}
-  	}
-}
-
 query {
 	queryUser(filter: { screen_name: { eq: "goinggodotnet" } })
 	{
