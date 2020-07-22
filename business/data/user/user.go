@@ -38,6 +38,30 @@ func Add(ctx context.Context, gql *graphql.GraphQL, nu NewUser) (User, error) {
 	return u, nil
 }
 
+// AddFriend adds a new user to the database if the user doesn't already exist.
+// Then the user is added to the collection of friends for the specified user id.
+func AddFriend(ctx context.Context, gql *graphql.GraphQL, userID string, nu NewUser) (User, error) {
+	// Validate the user doesn't already exists by screen name.
+	// Validate the user isn't already in the list of friends for userID.
+	/*
+			mutation {
+			updateUser(input: {
+				filter: {
+				id: [%q]
+				},
+				set: {
+					friends: [{
+						id: %q
+					}]
+				}
+			})
+			%s
+		}
+	*/
+
+	return User{}, nil
+}
+
 // One returns the specified user from the database by the city id.
 func One(ctx context.Context, gql *graphql.GraphQL, userID string) (User, error) {
 	query := fmt.Sprintf(`

@@ -14,7 +14,7 @@ import (
 
 // levels specifies how many layers of friends we will
 // retrieve from twitter.
-const levels = 1
+// const levels = 1
 
 // User represents information about a twitter user.
 type User struct {

@@ -68,6 +68,17 @@ func (s *Schema) DropAll(ctx context.Context) error {
 	return nil
 }
 
+// DropData perform an alter operatation against the configured server
+// to remove all the data and schema.
+func (s *Schema) DropData(ctx context.Context) error {
+	query := strings.NewReader(`{"drop_op": "DATA"}`)
+	if err := s.graphql.Do(ctx, "alter", query, nil); err != nil {
+		return errors.Wrap(err, "dropping data")
+	}
+
+	return nil
+}
+
 // Create is used create the schema in the database.
 func (s *Schema) Create(ctx context.Context) error {
 	schema, err := s.retrieve(ctx)

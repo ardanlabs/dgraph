@@ -20,3 +20,9 @@ schema:
 
 seed:
 	go run app/admin/main.go seed
+
+# Running tests within the local computer
+
+test:
+	go test ./... -count=1
+	staticcheck ./...
