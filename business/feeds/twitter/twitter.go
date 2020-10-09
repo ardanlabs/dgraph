@@ -163,6 +163,7 @@ func (t *Twitter) RetrieveFriends(ctx context.Context, id int) ([]User, error) {
 		return nil, fmt.Errorf("twitter decoding error: %w", err)
 	}
 
+	limit := 20
 	users := make([]User, len(friends.IDS))
 	for i, id := range friends.IDS {
 		u, err := t.RetrieveUserByID(ctx, id)
@@ -170,6 +171,10 @@ func (t *Twitter) RetrieveFriends(ctx context.Context, id int) ([]User, error) {
 			return nil, fmt.Errorf("twitter retrieve user: %w", err)
 		}
 		users[i] = u
+
+		if limit--; limit == 0 {
+			break
+		}
 	}
 
 	return users, nil

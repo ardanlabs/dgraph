@@ -44,18 +44,40 @@ func AddFriend(ctx context.Context, gql *graphql.GraphQL, userID string, nu NewU
 	// Validate the user doesn't already exists by screen name.
 	// Validate the user isn't already in the list of friends for userID.
 	/*
-			mutation {
+		mutation {
 			updateUser(input: {
 				filter: {
-				id: [%q]
+					id: ["0x04"]
 				},
 				set: {
 					friends: [{
-						id: %q
+						id: "0x06"
 					}]
 				}
 			})
-			%s
+			{
+				numUids
+			}
+		}
+
+		mutation {
+		updateUser(input: {
+				filter: {
+					id: ["0x04"]
+				},
+				set: {
+					friends: [{
+						source_id: "4444444444"
+						source: "source"
+						screen_name: "jacksmith"
+						name: "jack smith"
+						location: "Miami, FL"
+					}]
+				}
+			})
+			{
+				numUids
+			}
 		}
 	*/
 
@@ -156,29 +178,80 @@ mutation {
 }
 
 /*
+mutation {
+	addUser(input: [{
+		source_id: "1111111111"
+    	source: "source"
+		screen_name: "goinggodotnet"
+		name: "bill kennedy"
+		location: "Miami, FL"
+	}])
+	{
+		user {
+			id
+		}
+	}
+}
+
+mutation {
+	updateUser(input: {
+		filter: {
+			id: ["0x04"]
+		},
+		set: {
+			friends: [{
+				id: "0x06"
+			}]
+		}
+	})
+	{
+		numUids
+	}
+}
+
+mutation {
+  updateUser(input: {
+		filter: {
+    		id: ["0x04"]
+    	},
+    	set: {
+			friends: [{
+				source_id: "4444444444"
+				source: "source"
+				screen_name: "jacksmith"
+				name: "jack smith"
+				location: "Miami, FL"
+			}]
+    	}
+  	})
+	{
+    	numUids
+  	}
+}
+
 query {
 	queryUser(filter: { screen_name: { eq: "goinggodotnet" } })
 	{
-			id
-      source_id
-      source
-      screen_name
-      name
-      location
-      friends_count
-  }
+		id
+		source_id
+		source
+		screen_name
+		name
+		location
+		friends_count
+  	}
 }
 
 query {
 	getUser(id: "0x3")
 	{
-	  id
-      source_id
-      source
-      screen_name
-      name
-      location
-      friends_count
-  }
+		id
+		source_id
+		source
+		screen_name
+		name
+		location
+		friends_count
+	}
 }
 */
